@@ -7,7 +7,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom
 
-import reactST.reactWindow.components.FixedSizeList
+import reactST.reactWindow.components._
 import reactST.reactWindow.mod._
 import js.annotation._
 
@@ -39,6 +39,33 @@ object WindowHelper {
     height = height,
     itemCount = itemCount.toDouble,
     itemSize = itemSize,
+    width = width,
+    children =
+      rowComponent.asInstanceOf[reactST.react.mod.FunctionComponent[ListChildComponentProps]]
+  )
+
+  /**
+   * Helper method for creating a VariableSizeList.
+   * It wraps the apply method on the VariableSizeList companion object to make
+   * it easier to pass a scalajs component.
+   * See https://react-window.now.sh/#/api/VariableSizeList for more details.
+   * @param rowComponent Component for rendering the row. A ScalaComponent on which .toJsComponent.raw has been called.
+   * @param height Height of list
+   * @param itemCount Total number of items in the list. Note that only a few items will be rendered and displayed at a time.
+   * @param itemSizeFn Function from index to size of a item in the direction being windowed. For vertical lists, this is the row height. For horizontal lists, this is the column width.
+   * @param width Width of List
+   * @return A FixedSizeList.Builder which can be used to add additional configuration.
+   */
+  def variableSizeList(
+    rowComponent: js.Function1[ListChildComponentProps, ComponentFnResult],
+    height:       Double | String,
+    itemCount:    Int,
+    itemSizeFn:   Double => Double,
+    width:        Double | String
+  ): VariableSizeList.Builder = VariableSizeList(
+    height = height,
+    itemCount = itemCount.toDouble,
+    itemSize = itemSizeFn,
     width = width,
     children =
       rowComponent.asInstanceOf[reactST.react.mod.FunctionComponent[ListChildComponentProps]]
