@@ -39,9 +39,27 @@ object DemoMain {
                                  rowComponent = row
       )
 
+    val heightFn = (index: Double) =>
+      index.toInt match {
+        case i if i % 3 == 0 => 45.0
+        case i if i % 3 == 1 => 35.0
+        case _ => 25.0
+      }
+
+    val variableList =
+      WindowHelper.variableSizeList(height = 150,
+                                    itemCount = 1000,
+                                    itemSizeFn = heightFn,
+                                    width = 300,
+                                    rowComponent = row
+      )
+
     <.div(
       <.h1("Demo for scalajs-react-window"),
-      fixedList
+      <.h2("Fixed Size List"),
+      fixedList,
+      <.h2("Variable Size List"),
+      variableList
     )
       .renderIntoDOM(container)
 
